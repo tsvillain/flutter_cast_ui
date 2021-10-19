@@ -11,12 +11,14 @@ class ChromecastUiButton extends StatefulWidget {
   final Color? iconColor;
   final double? barHeight;
   final double? iconSize;
+  final bool? showDefaultPlayer;
 
   const ChromecastUiButton({
     this.dialogTitle,
     this.iconColor,
     this.barHeight,
     this.iconSize,
+    this.showDefaultPlayer,
     Key? key,
   }) : super(key: key);
 
@@ -53,6 +55,7 @@ class _ChromecastUiButtonState extends State<ChromecastUiButton>
   Future<void> showChromecastDeviceDialog() async {
     final dialog = ChromecastDeviceDialog(
       title: widget.dialogTitle,
+      showDefaultCastPlayer: widget.showDefaultPlayer,
     );
     if (context.isIOSTheme) {
       return showCupertinoDialog(

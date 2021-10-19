@@ -13,7 +13,7 @@ class ChromecastDeviceDialog extends StatefulWidget {
   final String? title;
   final String? emptyText;
   final String? retryButtonText;
-  final bool showDefaultCastPlayer;
+  final bool? showDefaultCastPlayer;
 
   const ChromecastDeviceDialog({
     this.title,
@@ -52,7 +52,7 @@ class _ChromecastDeviceDialogState extends State<ChromecastDeviceDialog>
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      widget.showDefaultCastPlayer
+                      widget.showDefaultCastPlayer!
                           ? ConstrainedBox(
                               constraints: BoxConstraints(
                                   maxHeight:
