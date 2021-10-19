@@ -1,21 +1,25 @@
+import 'package:cast_ui/src/util/extensions/context_extensions.dart';
 import 'package:cast_ui/src/viewmodel/chromecast_device_list_view_model.dart';
 import 'package:cast_ui/src/widget/chromecast_device_list_item.dart';
 import 'package:cast_ui/src/widget/chromecast_player.dart';
 import 'package:cast_ui/src/widget/provider/provider_widget.dart';
-import 'package:cast_ui/src/util/extensions/context_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import '../../cast_ui.dart';
 
 class ChromecastDeviceDialog extends StatefulWidget {
   final String? title;
   final String? emptyText;
   final String? retryButtonText;
+  final bool showDefaultCastPlayer;
 
   const ChromecastDeviceDialog({
     this.title,
     this.emptyText,
     this.retryButtonText,
+    this.showDefaultCastPlayer = true,
     Key? key,
   }) : super(key: key);
 
@@ -23,7 +27,8 @@ class ChromecastDeviceDialog extends StatefulWidget {
   _ChromecastDeviceDialogState createState() => _ChromecastDeviceDialogState();
 }
 
-class _ChromecastDeviceDialogState extends State<ChromecastDeviceDialog> implements ChromecastDeviceListNavigator {
+class _ChromecastDeviceDialogState extends State<ChromecastDeviceDialog>
+    implements ChromecastDeviceListNavigator {
   @override
   Widget build(BuildContext context) {
     return ProviderWidget<ChromecastDeviceListViewModel>(
@@ -47,10 +52,23 @@ class _ChromecastDeviceDialogState extends State<ChromecastDeviceDialog> impleme
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
-                        child: const ChromecastPlayer(),
-                      ),
+                      widget.showDefaultCastPlayer
+                          ? ConstrainedBox(
+                              constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height * 0.7),
+                              child: const ChromecastPlayer(),
+                            )
+                          : MaterialButton(
+                              padding: const EdgeInsets.all(8),
+                              onPressed: () async {
+                                await CastUiUtil().stopSession();
+                                if (!mounted) return;
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                              },
+                              child: const Text('STOP CASTING'),
+                            ),
                     ],
                   );
                 }
@@ -77,7 +95,8 @@ class _ChromecastDeviceDialogState extends State<ChromecastDeviceDialog> impleme
                         const SizedBox(height: 12),
                         Center(
                           child: Text(
-                            widget.emptyText ?? 'Something went wrong. Try again.',
+                            widget.emptyText ??
+                                'Something went wrong. Try again.',
                           ),
                         ),
                         Center(
@@ -101,7 +120,9 @@ class _ChromecastDeviceDialogState extends State<ChromecastDeviceDialog> impleme
                         ),
                       ] else if (viewModel.hasData) ...[
                         Container(
-                          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
+                          constraints: BoxConstraints(
+                              maxHeight:
+                                  MediaQuery.of(context).size.height * 0.7),
                           child: ListView.builder(
                             padding: const EdgeInsets.only(bottom: 16),
                             itemCount: viewModel.data.length,
@@ -109,7 +130,8 @@ class _ChromecastDeviceDialogState extends State<ChromecastDeviceDialog> impleme
                               final device = viewModel.data[index];
                               return ChromecastDeviceListItem(
                                 device: device,
-                                onClick: () => viewModel.onDeviceClicked(device),
+                                onClick: () =>
+                                    viewModel.onDeviceClicked(device),
                               );
                             },
                           ),

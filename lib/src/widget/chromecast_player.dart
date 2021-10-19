@@ -95,7 +95,9 @@ class _ChromecastPlayerState extends State<ChromecastPlayer> {
                                 await CastUiUtil().resumeStream();
                               }
                             },
-                            icon: Icon(isPlaying ? Icons.pause_rounded : Icons.play_arrow),
+                            icon: Icon(isPlaying
+                                ? Icons.pause_rounded
+                                : Icons.play_arrow),
                           ),
                         ),
                       ],
