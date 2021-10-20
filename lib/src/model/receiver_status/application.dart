@@ -22,15 +22,15 @@ class Application {
   });
 
   factory Application.fromJson(Map<String, dynamic> json) => Application(
-        appId: json['appId'] as String,
-        appType: json['appType'] as String,
-        displayName: json['displayName'] as String,
+        appId: json['appId'].toString(),
+        appType: json['appType'].toString(),
+        displayName: json['displayName'].toString(),
         isIdleScreen: json['isIdleScreen'] as bool,
-        launchedFromCloud: json['launchedFromCloud'] as bool,
-        sessionId: json['sessionId'] as String,
-        statusText: json['statusText'] as String,
-        transportId: json['transportId'] as String,
-        universalAppId: json['universalAppId'] as String,
+        launchedFromCloud: (json['launchedFromCloud'] ?? false) as bool,
+        sessionId: json['sessionId'].toString(),
+        statusText: json['statusText'].toString(),
+        transportId: json['transportId'].toString(),
+        universalAppId: json['universalAppId'].toString(),
       );
 
   Map<String, dynamic> toJson() {

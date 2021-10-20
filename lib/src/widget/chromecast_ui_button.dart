@@ -12,8 +12,10 @@ class ChromecastUiButton extends StatefulWidget {
   final double? barHeight;
   final double? iconSize;
   final bool? showDefaultPlayer;
+  final Function call;
 
   const ChromecastUiButton({
+    required this.call,
     this.dialogTitle,
     this.iconColor,
     this.barHeight,
@@ -33,7 +35,10 @@ class _ChromecastUiButtonState extends State<ChromecastUiButton>
     return ProviderWidget<ChromecastUiButtonViewModel>(
       create: () => ChromecastUiButtonViewModel()..init(this),
       consumer: (context, viewModel, child) => GestureDetector(
-        onTap: viewModel.onClick,
+        onTap: () async {
+          await viewModel.onClick();
+          widget.call();
+        },
         child: Container(
           height: widget.barHeight,
           color: Colors.transparent,
